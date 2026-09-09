@@ -1,0 +1,53 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const useCases = await getCollection(
+    "use-cases",
+    ({ data }) => !data.draft,
+  );
+  return useCases.map((useCase) => ({
+    params: { id: useCase.id },
+    props: { useCase },
+  }));
+}
+
+interface Props {
+  useCase: CollectionEntry<"use-cases">;
+}
+
+const { useCase } = Astro.props;
+const { Content } = await render(useCase);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: useCase.data.title,
+  description: useCase.data.description,
+  datePublished: useCase.data.publishDate.toISOString(),
+  inLanguage: "bn",
+  about: {
+    "@type": "Thing",
+    name: useCase.data.industry,
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Bangla Agent",
+    url: "https://banglaagent.com",
+  },
+};
+---
+
+<BaseLayout
+  title={`${useCase.data.title} | Bangla Agent`}
+  description={useCase.data.description}
+  canonicalPath={`/use-cases/${useCase.id}/`}
+  schema={schema}
+>
+  <article>
+    <h1>{useCase.data.title}</h1>
+    <p><strong>শিল্প:</strong> {useCase.data.industry} · <strong>চ্যানেল:</strong> {useCase.data.channel}</p>
+    <Content />
+  </article>
+</BaseLayout>

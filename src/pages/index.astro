@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const guides = (await getCollection("guides", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, 6);
+
+const useCases = (
+  await getCollection("use-cases", ({ data }) => !data.draft)
+)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, 6);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Bangla Agent",
+  url: "https://banglaagent.com",
+  description:
+    "বাংলাদেশি ব্যবসার জন্য AI এজেন্ট সম্পর্কিত বাংলা গাইড ও ব্যবহারিক উদাহরণ",
+  inLanguage: "bn",
+};
+---
+
+<BaseLayout
+  title="Bangla Agent — বাংলাদেশি ব্যবসার জন্য AI এজেন্ট গাইড"
+  description="AI এজেন্ট কী, কীভাবে কাজ করে, এবং বাংলাদেশি ছোট ও মাঝারি ব্যবসা কীভাবে এটি ব্যবহার করতে পারে — হোয়াটসঅ্যাপ অর্ডার, বিকাশ/নগদ পেমেন্ট রিমাইন্ডার এবং কাস্টমার সাপোর্ট অটোমেশন সহ।"
+  canonicalPath="/"
+  schema={schema}
+>
+  <main>
+    <header>
+      <h1>Bangla Agent</h1>
+      <p>বাংলাদেশি ব্যবসার জন্য AI এজেন্ট — গাইড ও বাস্তব উদাহরণ</p>
+    </header>
+
+    <section aria-labelledby="guides-heading">
+      <h2 id="guides-heading">গাইড</h2>
+      <ul>
+        {
+          guides.map((guide) => (
+            <li>
+              <a href={`/guides/${guide.id}/`}>{guide.data.title}</a>
+              <p>{guide.data.description}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section aria-labelledby="use-cases-heading">
+      <h2 id="use-cases-heading">ব্যবহারিক উদাহরণ</h2>
+      <ul>
+        {
+          useCases.map((useCase) => (
+            <li>
+              <a href={`/use-cases/${useCase.id}/`}>{useCase.data.title}</a>
+              <p>{useCase.data.description}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </main>
+</BaseLayout>

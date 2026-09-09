@@ -1,0 +1,17 @@
+# Bangla Agent
+
+> Bangla Agent (banglaagent.com) is a Bangla-language resource on AI agents —
+> what they are, how they work, and how Bangladeshi small and medium
+> businesses can use them (WhatsApp order-taking, bKash/Nagad payment
+> reminders, customer support automation, and similar use cases).
+
+## Guides
+Educational content explaining AI agent concepts in Bangla, aimed at
+business owners and non-technical readers.
+
+## Use Cases
+Concrete, industry-specific examples of AI agents solving real problems for
+Bangladeshi businesses (e-commerce, restaurants, retail, services).
+
+## Tools
+Profiles of AI agent platforms and tools relevant to the Bangladeshi market.

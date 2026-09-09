@@ -1,0 +1,53 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string; // e.g. "/guides/ai-agent-ki"
+  ogImage?: string;
+  schema?: Record<string, unknown>; // JSON-LD object, e.g. Article or FAQPage
+}
+
+const {
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  ogImage = "/og-default.png",
+  schema,
+} = Astro.props;
+
+const siteUrl = "https://banglaagent.com";
+const canonicalURL = new URL(canonicalPath, siteUrl).toString();
+---
+
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={new URL(ogImage, siteUrl).toString()} />
+    <meta property="og:locale" content="bn_BD" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    {schema && (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    )}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

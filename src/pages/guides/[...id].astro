@@ -1,0 +1,48 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const guides = await getCollection("guides", ({ data }) => !data.draft);
+  return guides.map((guide) => ({
+    params: { id: guide.id },
+    props: { guide },
+  }));
+}
+
+interface Props {
+  guide: CollectionEntry<"guides">;
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: guide.data.title,
+  description: guide.data.description,
+  datePublished: guide.data.publishDate.toISOString(),
+  ...(guide.data.updatedDate && {
+    dateModified: guide.data.updatedDate.toISOString(),
+  }),
+  inLanguage: "bn",
+  publisher: {
+    "@type": "Organization",
+    name: "Bangla Agent",
+    url: "https://banglaagent.com",
+  },
+};
+---
+
+<BaseLayout
+  title={`${guide.data.title} | Bangla Agent`}
+  description={guide.data.description}
+  canonicalPath={`/guides/${guide.id}/`}
+  schema={schema}
+>
+  <article>
+    <h1>{guide.data.title}</h1>
+    <Content />
+  </article>
+</BaseLayout>
